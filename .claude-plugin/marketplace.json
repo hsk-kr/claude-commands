@@ -1,0 +1,12 @@
+{
+  "name": "hsk-kr",
+  "owner": { "name": "hsk-kr", "url": "https://github.com/hsk-kr" },
+  "description": "hsk-kr's Claude Code plugins",
+  "plugins": [
+    {
+      "name": "claude-commands",
+      "source": "./",
+      "description": "Personal Claude Code commands, starting with /explain-pr."
+    }
+  ]
+}
