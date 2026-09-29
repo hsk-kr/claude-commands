@@ -71,6 +71,10 @@ else
   ID="branch-$(printf '%s' "$BRANCH" | tr -c 'A-Za-z0-9._-' '-')"
 fi
 
+# Use the real path (/tmp is a symlink to /private/tmp on macOS) so the
+# skill's Read/Edit permission rules match the files Claude touches.
+mkdir -p "$OUT_ROOT"
+OUT_ROOT=$(cd "$OUT_ROOT" && pwd -P)
 DIR="$OUT_ROOT/$REPO_NAME-$ID"
 rm -rf "$DIR"
 mkdir -p "$DIR"

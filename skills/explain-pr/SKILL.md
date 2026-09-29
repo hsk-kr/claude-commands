@@ -14,7 +14,9 @@ allowed-tools:
   - Bash(gh pr view *)
   - Bash(gh issue view *)
   - Read(//tmp/explain-pr/**)
-  - Write(//tmp/explain-pr/**)
+  - Read(//private/tmp/explain-pr/**)
+  - Edit(//tmp/explain-pr/**)
+  - Edit(//private/tmp/explain-pr/**)
   - Grep
   - Glob
 ---
@@ -27,7 +29,7 @@ Write a blog-style explainer of a pull request for someone who has to review it 
 
 !`"${CLAUDE_SKILL_DIR}/scripts/gather.sh" '$ARGUMENTS'`
 
-If no manifest appears above (the line shows as plain text, or shell execution is disabled), run `"${CLAUDE_SKILL_DIR}/scripts/gather.sh" '$ARGUMENTS'` yourself. If it printed an `explain-pr:` error, tell the user that error in one line and stop.
+If no manifest appears above (the line shows as plain text, or shell execution is disabled), run `${CLAUDE_SKILL_DIR}/scripts/gather.sh '$ARGUMENTS'` yourself. If it printed an `explain-pr:` error, tell the user that error in one line and stop.
 
 The manifest gives you the two commits that matter: **before** (the merge base) and **after** (the PR head). Everything below uses them.
 
@@ -37,7 +39,7 @@ Read the bundle files in this order: `pr.md`, `issues.md`, `commits.md`, `thread
 
 - `history.md`: earlier PRs that touched the same files. Use them to explain why the code looked the way it did before this change.
 - `docs.md`: read the `CLAUDE.md` / `AGENTS.md` / `README.md` files on the path to the changed code.
-- `wiki/` (if present): grep it for the main nouns of the change (feature, module, table and flag names) and read the pages that match.
+- `wiki/` (if present): search it with the Grep tool (it sits outside the repo, so `git grep` can't see it) for the main nouns of the change (feature, module, table and flag names), then read the pages that match.
 
 The reference scan is mechanical. Ignore linked items that turn out to be unrelated, such as a `#1` from a numbered list.
 
@@ -53,6 +55,8 @@ Read the code, not only the diff. **The working tree is at neither commit and ma
 The session already runs in the repo root, and these git commands are pre-approved only in their plain form. Run **one git command per call**, with the full SHA written out. Don't use `cd`, `git -C`, pipes, `&&`, `;` or shell variables, or you'll trigger permission prompts. Read the bundle files with the Read tool, not `cat`.
 
 For the Background section, trace the flow the PR touches end to end in the **before** state: where it starts (route, job, UI event, CLI), what it passes through, and where it ends up (DB write, response, side effect).
+
+Stop researching once you can back every section with evidence. Chasing every usage of every symbol makes the page slower to produce, not better. As a rough budget, a small PR needs about 20 code lookups and a medium one about 40.
 
 How much to do yourself depends on the size in the manifest:
 
@@ -122,7 +126,7 @@ The reader will learn from this page and repeat it to teammates, so a confident 
 Tables, `h3` subheadings, lists, `code` and links all work as normal HTML.
 
 - **Code:** HTML-escape `&`, `<` and `>` inside `pre`/`code`. Set the language class (`language-ts`, `language-ruby`, `language-sql`, `language-diff`, …). Keep snippets to about 25 lines and trim the rest with `// …`. A `language-diff` block works well for small before/after changes.
-- **Diagrams:** Mermaid `flowchart LR`/`TD` or `sequenceDiagram`, with about 12 nodes at most. Quote labels that contain punctuation: `A["api/x.ts: handle()"]`. Escape `<` `>` `&`. Only draw one when it's clearer than prose.
+- **Diagrams:** Mermaid `flowchart TD` or `sequenceDiagram`, with about 12 nodes at most. The column is 720px wide, so use `flowchart LR` only for chains of about 5 nodes or fewer. Quote labels that contain punctuation: `A["api/x.ts: handle()"]`. Escape `<` `>` `&`. Only draw one when it's clearer than prose.
 
 ### Style
 
@@ -133,7 +137,7 @@ Tables, `h3` subheadings, lists, `code` and links all work as normal HTML.
 
 ## 4. Render and finish
 
-Run `"${CLAUDE_SKILL_DIR}/scripts/render.sh" <bundle-dir>`. It wraps the article in the template, writes `<bundle-dir>.html` and opens it in the browser. If it rejects the article, fix the article and run it again.
+Run `${CLAUDE_SKILL_DIR}/scripts/render.sh <bundle-dir>`. It wraps the article in the template, writes `<bundle-dir>.html` and opens it in the browser. If it rejects the article, fix the article and run it again.
 
 Then reply in the terminal with two or three lines: one sentence on what the PR is for, plus the report path.
 
