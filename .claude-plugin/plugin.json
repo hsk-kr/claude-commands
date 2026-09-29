@@ -2,10 +2,18 @@
   "name": "claude-commands",
   "displayName": "hsk's Claude commands",
   "description": "Personal Claude Code commands. /explain-pr turns a PR into a blog-style explainer so you understand the change and the codebase behind it.",
-  "version": "0.1.1",
-  "author": { "name": "hsk-kr", "url": "https://github.com/hsk-kr" },
+  "author": {
+    "name": "hsk-kr",
+    "url": "https://github.com/hsk-kr"
+  },
   "homepage": "https://github.com/hsk-kr/claude-commands",
   "repository": "https://github.com/hsk-kr/claude-commands",
   "license": "MIT",
-  "keywords": ["pull-request", "code-review", "onboarding", "learning", "explain"]
+  "keywords": [
+    "pull-request",
+    "code-review",
+    "onboarding",
+    "learning",
+    "explain"
+  ]
 }

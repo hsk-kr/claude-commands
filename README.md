@@ -57,7 +57,7 @@ Your working tree is never touched: no checkout, no stash. Uncommitted work is s
 
 Requires `git`, `bash` and the [GitHub CLI](https://cli.github.com) (`gh auth login`).
 
-To update: `/plugin marketplace update hsk-kr`, or turn on auto-update for the marketplace in `/plugin`.
+Turn on auto-update so new commits reach you: in `/plugin`, open **Marketplaces**, select `hsk-kr` and choose **Enable auto-update**. To update by hand instead, run `claude plugin update claude-commands@hsk-kr`. The plugin has no pinned `version`, so every push to `main` is a new release.
 
 If another command is already called `/explain-pr`, use the full name `/claude-commands:explain-pr`.
 
@@ -65,7 +65,7 @@ If another command is already called `/explain-pr`, use the full name `/claude-c
 
 ```
 claude --plugin-dir ~/dev/claude-commands     # load the local copy
-claude plugin validate --strict .             # check the manifests
+claude plugin validate .                      # check the manifests (warns about the deliberately missing version)
 ```
 
 Run `/reload-plugins` after editing. Each command is a skill in `skills/<name>/`: a `SKILL.md` plus any scripts and templates it needs.
